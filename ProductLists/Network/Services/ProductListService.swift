@@ -14,7 +14,7 @@ protocol ProductListServiceProtocol {
 //Added this layer to keep higher level modules independent of lower level modules
 
 class ProductListService: BaseService, ProductListServiceProtocol {
-    let appService = AppServices.productList
+    private let appService = AppServices.productList
     func getProductList(completion: @escaping (Result<[ProductListModel], NetworkError>) -> Void) {
         // We can use here URLComponents and take foloowing fields as parameters.
         guard let url = URL(string: baseURL + appService.path) else {
@@ -34,13 +34,13 @@ class ProductListService: BaseService, ProductListServiceProtocol {
         }
     }
     
-    func getProductList(productListModel: ProductListDTO) -> [ProductListModel] {
+    private func getProductList(productListModel: ProductListDTO) -> [ProductListModel] {
         var result = [ProductListModel]()
         for item in productListModel.products {
-            result.append(ProductListModel(image: item.imageURL,
+            result.append(ProductListModel(image: item.imageURL ?? "",
                                            name: item.title,
                                            price: item.price[0].value,
-                                           rating: item.ratingCount,
+                                           rating: item.ratingCount ?? 0.0,
                                            isFavourite: false))
         }
         return result

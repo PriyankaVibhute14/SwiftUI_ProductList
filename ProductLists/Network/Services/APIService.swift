@@ -9,7 +9,7 @@ import Foundation
 
 final class APIService {
     
-    let urlSession: URLSession
+    private let urlSession: URLSession
     
     init(urlSession: URLSession = URLSession.shared) {
         self.urlSession = urlSession

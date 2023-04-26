@@ -21,11 +21,14 @@ struct ProductListView: View {
     }
     
     private let constants = Constants()
-    var columns = [GridItem(.adaptive(minimum: 160), spacing: 20)]
-    @ObservedObject var productListViewModel: ProductListViewModel
-    @State var showDetailsScreen = false
-    @State var index: Int = 0
-    @State var productImage: UIImage = UIImage()
+    private var columns = [GridItem(.adaptive(minimum: 160), spacing: 20)]
+    @ObservedObject private var productListViewModel: ProductListViewModel
+    @State private var showDetailsScreen = false
+    @State private var index: Int = 0
+    
+    init(productListViewModel: ProductListViewModel) {
+        self.productListViewModel = productListViewModel
+    }
     
     var body: some View {
         NavigationView {
@@ -36,12 +39,14 @@ struct ProductListView: View {
                     VStack {
                         // we can handle this navigation using navigation links or navigation stack.
                         if showDetailsScreen {
-                            ProductDetailsView(product: productListViewModel.productList[index], showDetailsScreen: $showDetailsScreen)
+                            if let productList = productListViewModel.productList {
+                                ProductDetailsView(product: productList[index], showDetailsScreen: $showDetailsScreen)
+                            }
                         } else {
-                            if productListViewModel.isFavourite {
-                                productListView(products: productListViewModel.favouriteProducts)
+                            if productListViewModel.isFavourite ?? false {
+                                productListView(products: productListViewModel.favouriteProducts ?? [])
                             } else {
-                                productListView(products: productListViewModel.productList)
+                                productListView(products: productListViewModel.productList ?? [])
                             }
                         }
                         bottomNavigationView()
@@ -57,7 +62,7 @@ struct ProductListView: View {
         }
     }
     
-    func productListView(products: [ProductListModel]) -> some View {
+    private func productListView(products: [ProductListModel]) -> some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: constants.innerSpacing) {
                 ForEach(Array(products.enumerated()),
@@ -74,7 +79,7 @@ struct ProductListView: View {
     }
     
     // we can create separate component for this product view so that it can be used at multiple places if required.
-    func productView(product: ProductListModel, selectedIndex: Int) -> some View {
+    private func productView(product: ProductListModel, selectedIndex: Int) -> some View {
         ZStack(alignment: .topTrailing) {
             ZStack(alignment: .bottom) {
                 ProductImageView(urlString: product.image)
@@ -112,21 +117,25 @@ struct ProductListView: View {
             .shadow(radius: 3)
             // This favourite array needs to be filled by getting response from API or Database. As this is assignment I am using temp solution.
             Button {
-                    if !productListViewModel.isFavourite {
-                        if productListViewModel.productList[selectedIndex].isFavourite {
-                            productListViewModel.productList[selectedIndex].isFavourite.toggle()
-                            productListViewModel.favouriteProducts = productListViewModel.favouriteProducts.filter { $0.id != productListViewModel.productList[selectedIndex].id }
-                        } else {
-                            productListViewModel.productList[selectedIndex].isFavourite.toggle()
-                            productListViewModel.favouriteProducts.append(productListViewModel.productList[selectedIndex])
+                if !(productListViewModel.isFavourite ?? false) {
+                    if let productList = productListViewModel.productList {
+                        if productList[selectedIndex].isFavourite {
+                            productListViewModel.productList?[selectedIndex].isFavourite.toggle()
+                            productListViewModel.favouriteProducts = productListViewModel.favouriteProducts?.filter { $0.id != productListViewModel.productList?[selectedIndex].id }
                         }
                     } else {
-                        if let index = self.productListViewModel.productList.firstIndex(where: {$0.id == productListViewModel.favouriteProducts[selectedIndex].id}) {
-                            productListViewModel.productList[index].isFavourite.toggle()
+                        if let product = productListViewModel.productList?[selectedIndex] {
+                            productListViewModel.productList?[selectedIndex].isFavourite.toggle()
+                            productListViewModel.favouriteProducts?.append(product)
                         }
-                        
-                        productListViewModel.favouriteProducts = productListViewModel.favouriteProducts.filter { $0.id != productListViewModel.favouriteProducts[selectedIndex].id }
                     }
+                } else {
+                    if let index = self.productListViewModel.productList?.firstIndex(where: {$0.id == productListViewModel.favouriteProducts?[selectedIndex].id}) {
+                        productListViewModel.productList?[index].isFavourite.toggle()
+                    }
+                    
+                    productListViewModel.favouriteProducts = productListViewModel.favouriteProducts?.filter { $0.id != productListViewModel.favouriteProducts?[selectedIndex].id }
+                }
             } label: {
                 Image(systemName: "heart")
                     .padding(constants.mediumPadding)
@@ -138,7 +147,7 @@ struct ProductListView: View {
         }
     }
     
-    func bottomNavigationView() -> some View {
+    private func bottomNavigationView() -> some View {
         HStack {
             Spacer()
             Button {

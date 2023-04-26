@@ -14,20 +14,20 @@ struct ProductListDTO: Codable {
 struct Product: Codable {
     let citrusID: String?
     let title, id: String
-    let imageURL: String
+    let imageURL: String?
     let price: [Price]
-    let brand: String
-    let badges: [String]
-    let ratingCount: Double
-    let messages: Messages
+    let brand: String?
+    let badges: [String]?
+    let ratingCount: Double?
+    let messages: Messages?
     let isAddToCartEnable: Bool
     let addToCartButtonText: AddToCartButtonText
-    let isInTrolley, isInWishlist: Bool
+    let isInTrolley, isInWishlist: Bool?
     let purchaseTypes: [PurchaseTypeElement]
-    let isFindMeEnable: Bool
-    let saleUnitPrice: Double
-    let totalReviewCount: Int
-    let isDeliveryOnly, isDirectFromSupplier: Bool
+    let isFindMeEnable: Bool?
+    let saleUnitPrice: Double?
+    let totalReviewCount: Int?
+    let isDeliveryOnly, isDirectFromSupplier: Bool?
 
     enum CodingKeys: String, CodingKey {
         case citrusID = "citrusId"
@@ -52,7 +52,7 @@ struct Sash: Codable {
 struct Price: Codable {
     let message: Message
     let value: Double
-    let isOfferPrice: Bool
+    let isOfferPrice: Bool?
 }
 
 enum Message: String, Codable {
@@ -63,8 +63,8 @@ enum Message: String, Codable {
 struct PurchaseTypeElement: Codable {
     let purchaseType: PurchaseTypeEnum
     let displayName: DisplayName
-    let unitPrice: Double
-    let minQtyLimit, maxQtyLimit, cartQty: Int
+    let unitPrice: Double?
+    let minQtyLimit, maxQtyLimit, cartQty: Int?
 }
 
 enum DisplayName: String, Codable {

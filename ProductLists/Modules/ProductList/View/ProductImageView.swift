@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct ProductImageView: View {
-    @ObservedObject var productImageModel: ProductListViewModel
-    let cornerRadius = 20.0
-    let width = 180.0
-    static var defaultImage = UIImage(named: "defaultImage")
+    @ObservedObject private var productImageModel: ProductListViewModel
+    private let cornerRadius = 20.0
+    private let width = 180.0
+    var defaultImage = UIImage(named: "defaultImage") ?? UIImage()
     
     init(urlString: String) {
         productImageModel = ProductListViewModel(isFavourite: false,
@@ -21,7 +21,7 @@ struct ProductImageView: View {
     }
     
     var body: some View {
-        Image(uiImage: productImageModel.productImage ?? ProductImageView.defaultImage!)
+        Image(uiImage: productImageModel.productImage ?? defaultImage)
             .resizable()
             .cornerRadius(cornerRadius)
             .frame(width: width)

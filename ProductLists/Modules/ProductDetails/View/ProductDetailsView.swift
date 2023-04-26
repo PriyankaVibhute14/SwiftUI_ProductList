@@ -17,8 +17,13 @@ struct ProductDetailsView: View {
     }
     
     private let constants = Constants()
-    var product: ProductListModel
-    @Binding var showDetailsScreen: Bool
+    private var product: ProductListModel
+    @Binding private var showDetailsScreen: Bool
+    
+    init(product: ProductListModel, showDetailsScreen: Binding<Bool>) {
+        self.product = product
+        self._showDetailsScreen = showDetailsScreen
+    }
     
     var body: some View {
         VStack(spacing: constants.smallPadding) {
@@ -39,7 +44,7 @@ struct ProductDetailsView: View {
         .navigationBarItems(trailing: closeButton())
     }
     
-    func closeButton() -> some View {
+    private func closeButton() -> some View {
         VStack {
             HStack {
                 Spacer()
