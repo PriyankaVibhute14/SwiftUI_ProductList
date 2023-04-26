@@ -11,9 +11,9 @@ import SwiftUI
 class ProductListViewModel: ObservableObject {
     private var productListService: ProductListServiceProtocol?
     private var downloadImageService: DownloadImageServiceProtocol?
-    @Published var productList: [ProductListModel]?
+    @Published var productList = [ProductListModel]()
     // This favourite array needs to be filled by getting response from API or Database. As this is assignment I am using temp solution.
-    @Published var favouriteProducts: [ProductListModel]?
+    @Published var favouriteProducts = [ProductListModel]()
     @Published var isFavourite: Bool?
     @Published var productImage: UIImage?
     @Published var isLoading: Bool = true
