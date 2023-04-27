@@ -8,10 +8,12 @@
 import SwiftUI
 
 struct ProductImageView: View {
-    @ObservedObject private var productImageModel: ProductListViewModel
+    //Constants
     private let cornerRadius = 20.0
     private let width = 180.0
-    var defaultImage = UIImage(named: "defaultImage") ?? UIImage()
+    private var defaultImage = UIImage(named: "defaultImage") ?? UIImage()
+    
+    @ObservedObject private var productImageModel: ProductListViewModel
     
     init(urlString: String) {
         productImageModel = ProductListViewModel(isFavourite: false,

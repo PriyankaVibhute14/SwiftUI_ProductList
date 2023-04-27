@@ -17,25 +17,26 @@ struct ProductDetailsView: View {
     }
     
     private let constants = Constants()
-    private var product: ProductListModel
-    @Binding private var showDetailsScreen: Bool
+    private var product: ProductListModel?
+    @Binding private var showDetailsScreen: Bool?
+    private var defaultImage = UIImage(named: "defaultImage") ?? UIImage()
     
-    init(product: ProductListModel, showDetailsScreen: Binding<Bool>) {
+    init(product: ProductListModel?, showDetailsScreen: Binding<Bool?>?) {
         self.product = product
-        self._showDetailsScreen = showDetailsScreen
+        self._showDetailsScreen = showDetailsScreen ?? Binding.constant(false)
     }
     
     var body: some View {
         VStack(spacing: constants.smallPadding) {
-            ProductImageView(urlString: product.image)
+            ProductImageView(urlString: product?.image ?? "")
                 .frame(width: constants.productViewWidth, height: constants.productViewHeight)
                 .padding(.top, constants.topPadding)
-            Text(product.name)
+            Text(product?.name ?? "")
                 .font(.title)
                 .bold()
-            Text(String("₹ \(product.price)"))
+            Text(String("₹ \(product?.price ?? 0.0)"))
                 .font(.headline)
-            Text(String("\(product.rating)*"))
+            Text(String("\(product?.rating ?? 0.0)*"))
                 .font(.headline)
             Spacer()
         }
@@ -65,13 +66,12 @@ struct ProductDetailsView: View {
 }
 
 struct ProductDetailsView_Previews: PreviewProvider {
-    @State static var showDetailsScreen = false
     static var previews: some View {
         ProductDetailsView(product: ProductListModel(image: "",
                                                      name: "",
                                                      price: 4.0,
                                                      rating: 4.0,
                                                      isFavourite: false),
-                           showDetailsScreen: $showDetailsScreen)
+                           showDetailsScreen: nil)
     }
 }

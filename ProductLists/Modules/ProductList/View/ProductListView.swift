@@ -23,8 +23,8 @@ struct ProductListView: View {
     private let constants = Constants()
     private var columns = [GridItem(.adaptive(minimum: 160), spacing: 20)]
     @ObservedObject private var productListViewModel: ProductListViewModel
-    @State private var showDetailsScreen = false
-    @State private var index: Int = 0
+    @State private var showDetailsScreen: Bool?
+    @State private var index: Int?
     
     init(productListViewModel: ProductListViewModel) {
         self.productListViewModel = productListViewModel
@@ -33,14 +33,14 @@ struct ProductListView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                if productListViewModel.isLoading {
+                if productListViewModel.isLoading ?? false {
                     ProgressView()
                 } else {
                     VStack {
                         // we can handle this navigation using navigation links or navigation stack.
-                        if showDetailsScreen {
+                        if showDetailsScreen ?? false {
                             if let productList = productListViewModel.productList {
-                                ProductDetailsView(product: productList[index], showDetailsScreen: $showDetailsScreen)
+                                ProductDetailsView(product: productList[index ?? 0], showDetailsScreen: $showDetailsScreen)
                             }
                         } else {
                             if productListViewModel.isFavourite ?? false {
@@ -57,6 +57,8 @@ struct ProductListView: View {
             }
             .background(Color.pink.opacity(constants.opacity))
             .onAppear {
+                showDetailsScreen = false
+                index = 0
                 productListViewModel.getProductList()
             }
         }
