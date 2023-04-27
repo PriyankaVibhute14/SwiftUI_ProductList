@@ -44,9 +44,9 @@ struct ProductListView: View {
                             }
                         } else {
                             if productListViewModel.isFavourite ?? false {
-                                productListView(products: productListViewModel.favouriteProducts)
+                                productListView(products: productListViewModel.favouriteProducts ?? [])
                             } else {
-                                productListView(products: productListViewModel.productList)
+                                productListView(products: productListViewModel.productList ?? [])
                             }
                         }
                         bottomNavigationView()
@@ -120,19 +120,27 @@ struct ProductListView: View {
             // This favourite array needs to be filled by getting response from API or Database. As this is assignment I am using temp solution.
             Button {
                 if !(productListViewModel.isFavourite ?? false) {
-                    if productListViewModel.productList[selectedIndex].isFavourite {
-                        productListViewModel.productList[selectedIndex].isFavourite.toggle()
-                        productListViewModel.favouriteProducts = productListViewModel.favouriteProducts.filter { $0.id != productListViewModel.productList[selectedIndex].id }
-                    } else {
-                        productListViewModel.productList[selectedIndex].isFavourite.toggle()
-                        productListViewModel.favouriteProducts.append(productListViewModel.productList[selectedIndex])
+                    if var product = productListViewModel.productList?[selectedIndex] {
+                        if product.isFavourite {
+                            productListViewModel.productList?[selectedIndex].isFavourite.toggle()
+                            product.isFavourite.toggle()
+                            productListViewModel.favouriteProducts = productListViewModel.favouriteProducts?.filter { $0.id != productListViewModel.productList?[selectedIndex].id }
+                        } else {
+                            productListViewModel.productList?[selectedIndex].isFavourite.toggle()
+                            product.isFavourite.toggle()
+                            if productListViewModel.favouriteProducts != nil {
+                                productListViewModel.favouriteProducts?.append(product)
+                            } else {
+                                productListViewModel.favouriteProducts = [product]
+                            }
+                        }
                     }
                 } else {
-                    if let index = self.productListViewModel.productList.firstIndex(where: {$0.id == productListViewModel.favouriteProducts[selectedIndex].id}) {
-                        productListViewModel.productList[index].isFavourite.toggle()
+                    if let index = self.productListViewModel.productList?.firstIndex(where: {$0.id == productListViewModel.favouriteProducts?[selectedIndex].id}) {
+                        productListViewModel.productList?[index].isFavourite.toggle()
                     }
 
-                    productListViewModel.favouriteProducts = productListViewModel.favouriteProducts.filter { $0.id != productListViewModel.favouriteProducts[selectedIndex].id }
+                    productListViewModel.favouriteProducts = productListViewModel.favouriteProducts?.filter { $0.id != productListViewModel.favouriteProducts?[selectedIndex].id }
                 }
         } label: {
                 Image(systemName: "heart")

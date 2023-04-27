@@ -9,7 +9,7 @@ import Foundation
 
 final class APIService {
     
-    private let urlSession: URLSession
+    private let urlSession: URLSession?
     
     init(urlSession: URLSession = URLSession.shared) {
         self.urlSession = urlSession
@@ -19,7 +19,7 @@ final class APIService {
                              type: T.Type,
                              completion: @escaping (Result<T, NetworkError>) -> Void) {
         //We can use dataTask with request. As this assignments has only get URL calls, using dataTask with url.
-        urlSession.dataTask(with: url) { data, response, error in
+        urlSession?.dataTask(with: url) { data, response, error in
             guard let data = data else {
                 if let _ = error {
                     completion(.failure(.apiError))

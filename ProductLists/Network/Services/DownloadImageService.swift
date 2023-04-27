@@ -26,7 +26,7 @@ class DownloadImageService: BaseService, DownloadImageServiceProtocol {
             return
         }
         
-        urlSession.dataTask(with: url) { data, response, error in
+        urlSession?.dataTask(with: url) { data, response, error in
             guard let data = data, error == nil else {
                 completion(.failure(.apiError))
                 return

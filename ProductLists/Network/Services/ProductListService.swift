@@ -22,7 +22,7 @@ class ProductListService: BaseService, ProductListServiceProtocol {
             return
         }
         
-        apiService.request(url: url,
+        apiService?.request(url: url,
                            type: ProductListDTO.self) { result in
             switch result {
             case .success(let data):

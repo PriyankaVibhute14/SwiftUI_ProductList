@@ -28,8 +28,8 @@ extension AppServices {
 class BaseService {
     let baseURL = "https://run.mocky.io/v3"
     
-    let urlSession: URLSession
-    let apiService: APIService
+    let urlSession: URLSession?
+    let apiService: APIService?
     
     init(urlSession: URLSession = URLSession.shared) {
         self.urlSession = urlSession

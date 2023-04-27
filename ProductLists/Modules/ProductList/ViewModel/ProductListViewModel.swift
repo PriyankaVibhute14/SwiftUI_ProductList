@@ -14,9 +14,9 @@ class ProductListViewModel: ObservableObject {
     @Published var isFavourite: Bool?
     @Published var productImage: UIImage?
     @Published var isLoading: Bool?
-    @Published var productList = [ProductListModel]()
+    @Published var productList : [ProductListModel]?
     // This favourite array needs to be filled by getting response from API or Database. As this is assignment I am using temp solution.
-    @Published var favouriteProducts = [ProductListModel]()
+    @Published var favouriteProducts : [ProductListModel]?
     // Using this completion in testcases
     var completion: (() -> ())?
     

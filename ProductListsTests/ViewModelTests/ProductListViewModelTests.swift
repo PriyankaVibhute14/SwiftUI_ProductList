@@ -21,7 +21,7 @@ final class ProductListViewModelTests: XCTestCase {
             exp.fulfill()
         }
         waitForExpectations(timeout: 2)
-        XCTAssertEqual(viewModel.productList.count, 4)
+        XCTAssertEqual(viewModel.productList?.count, 4)
     }
     
     func test_productList_API_failure() {
@@ -36,7 +36,7 @@ final class ProductListViewModelTests: XCTestCase {
             exp.fulfill()
         }
         waitForExpectations(timeout: 2)
-        XCTAssertEqual(viewModel.productList.count, 0)
+        XCTAssertNil(viewModel.productList)
     }
     
     func test_download_image_API_success() {
