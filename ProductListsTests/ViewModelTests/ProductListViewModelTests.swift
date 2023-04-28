@@ -15,9 +15,8 @@ final class ProductListViewModelTests: XCTestCase {
         let viewModel = ProductListViewModel(isFavourite: false,
                                        productListService: mockProductListService,
                                        downloadImageService: mockDownloadImageService)
-        viewModel.getProductList()
         let exp = expectation(description: "Loading..")
-        viewModel.completion = {
+        viewModel.getProductList {
             exp.fulfill()
         }
         waitForExpectations(timeout: 2)
@@ -30,9 +29,8 @@ final class ProductListViewModelTests: XCTestCase {
         let viewModel = ProductListViewModel(isFavourite: false,
                                        productListService: mockProductListService,
                                        downloadImageService: mockDownloadImageService)
-        viewModel.getProductList()
         let exp = expectation(description: "LoadingFailureList..")
-        viewModel.completion = {
+        viewModel.getProductList{
             exp.fulfill()
         }
         waitForExpectations(timeout: 2)
@@ -46,9 +44,9 @@ final class ProductListViewModelTests: XCTestCase {
                                        productListService: mockProductListService,
                                        downloadImageService: mockDownloadImageService)
         let exp = expectation(description: "LoadingImage..")
-        viewModel.getProductImage(urlString: "")
-        viewModel.completion = {
+        viewModel.getProductImage(urlString: "") {
             exp.fulfill()
+
         }
         waitForExpectations(timeout: 2)
         XCTAssertNotNil(viewModel.productImage)
@@ -61,10 +59,10 @@ final class ProductListViewModelTests: XCTestCase {
                                        productListService: mockProductListService,
                                        downloadImageService: mockDownloadImageService)
         let exp = expectation(description: "LoadingFailureImage..")
-        viewModel.getProductImage(urlString: "")
-        viewModel.completion = {
+        viewModel.getProductImage(urlString: "") {
             exp.fulfill()
         }
+
         waitForExpectations(timeout: 2)
         XCTAssertNil(viewModel.productImage)
     }

@@ -9,9 +9,9 @@ import Foundation
 
 struct ProductListModel: Identifiable {
     var id = UUID()
-    let image: String
-    let name: String
-    let price: Double
-    let rating: Double
-    var isFavourite: Bool
+    let image: String?
+    let name: String?
+    let price: Double?
+    let rating: Double?
+    var isFavourite: Bool?
 }

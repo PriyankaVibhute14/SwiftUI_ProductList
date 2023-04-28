@@ -17,8 +17,6 @@ class ProductListViewModel: ObservableObject {
     @Published var productList : [ProductListModel]?
     // This favourite array needs to be filled by getting response from API or Database. As this is assignment I am using temp solution.
     @Published var favouriteProducts : [ProductListModel]?
-    // Using this completion in testcases
-    var completion: (() -> ())?
     
     init(isFavourite: Bool?,
          productListService: ProductListServiceProtocol,
@@ -28,7 +26,7 @@ class ProductListViewModel: ObservableObject {
         self.downloadImageService = downloadImageService
     }
     
-    func getProductList() {
+    func getProductList(completion: (() -> ())? = nil) {
         isLoading = true
         productListService?.getProductList(completion: { [weak self] result in
             switch result {
@@ -36,31 +34,30 @@ class ProductListViewModel: ObservableObject {
                 DispatchQueue.main.async {
                     self?.productList = data
                     self?.isLoading = false
-                    self?.completion?()
+                    completion?()
                 }
             case .failure(_) :
                 DispatchQueue.main.async {
                     //Need to show Error Popup on UI to handle this error but due to time constraint could't cover in this assignment.
-                    self?.completion?()
+                    completion?()
                     self?.isLoading = false
                 }
             }
         })
     }
     
-    func getProductImage(urlString: String?) {
+    func getProductImage(urlString: String?, completion: (() -> ())? = nil) {
         downloadImageService?.getImage(url: urlString ?? "", completion: { [weak self] result in
             switch result {
             case .success(let image):
                 DispatchQueue.main.async {
                     self?.productImage = image
-                    self?.completion?()
+                    completion?()
                 }
-            case .failure(let error):
+            case .failure(_):
                 //Need to show Error Popup on UI to handle this error but due to time constraint could't cover in this assignment.
                 DispatchQueue.main.async {
-                    self?.completion?()
-                    print(error)
+                    completion?()
                 }
             }
         })

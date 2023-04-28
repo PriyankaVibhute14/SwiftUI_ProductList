@@ -23,23 +23,27 @@ class ProductListService: BaseService, ProductListServiceProtocol {
         }
         
         apiService?.request(url: url,
-                           type: ProductListDTO.self) { result in
+                            type: ProductListDTO.self) { result in
             switch result {
             case .success(let data):
-                let listModel = self.getProductList(productListModel: data)
-                completion(.success(listModel))
+                if let products = data.products {
+                    let listModel = self.getProductList(products: products)
+                    completion(.success(listModel))
+                } else {
+                    completion(.failure(.apiError))
+                }
             case .failure(_):
                 completion(.failure(.apiError))
             }
         }
     }
     
-    private func getProductList(productListModel: ProductListDTO) -> [ProductListModel] {
+    private func getProductList(products: [Product]) -> [ProductListModel] {
         var result = [ProductListModel]()
-        for item in productListModel.products {
+        for item in products {
             result.append(ProductListModel(image: item.imageURL ?? "",
                                            name: item.title,
-                                           price: item.price[0].value,
+                                           price: item.price?[0].value,
                                            rating: item.ratingCount ?? 0.0,
                                            isFavourite: false))
         }

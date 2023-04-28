@@ -84,12 +84,12 @@ struct ProductListView: View {
     private func productView(product: ProductListModel, selectedIndex: Int) -> some View {
         ZStack(alignment: .topTrailing) {
             ZStack(alignment: .bottom) {
-                ProductImageView(urlString: product.image)
+                ProductImageView(urlString: product.image ?? "")
                 VStack(alignment: .leading) {
-                    Text(product.name)
+                    Text(product.name ?? "")
                         .foregroundColor(Color.white)
                         .bold()
-                    Text("₹ \(product.price)")
+                    Text("₹ \(product.price ?? 0.0)")
                         .foregroundColor(Color.white)
                         .font(.caption)
                         .padding(.bottom, constants.smallPadding)
@@ -121,13 +121,13 @@ struct ProductListView: View {
             Button {
                 if !(productListViewModel.isFavourite ?? false) {
                     if var product = productListViewModel.productList?[selectedIndex] {
-                        if product.isFavourite {
-                            productListViewModel.productList?[selectedIndex].isFavourite.toggle()
-                            product.isFavourite.toggle()
+                        if product.isFavourite ?? false {
+                            productListViewModel.productList?[selectedIndex].isFavourite?.toggle()
+                            product.isFavourite?.toggle()
                             productListViewModel.favouriteProducts = productListViewModel.favouriteProducts?.filter { $0.id != productListViewModel.productList?[selectedIndex].id }
                         } else {
-                            productListViewModel.productList?[selectedIndex].isFavourite.toggle()
-                            product.isFavourite.toggle()
+                            productListViewModel.productList?[selectedIndex].isFavourite?.toggle()
+                            product.isFavourite?.toggle()
                             if productListViewModel.favouriteProducts != nil {
                                 productListViewModel.favouriteProducts?.append(product)
                             } else {
@@ -137,7 +137,7 @@ struct ProductListView: View {
                     }
                 } else {
                     if let index = self.productListViewModel.productList?.firstIndex(where: {$0.id == productListViewModel.favouriteProducts?[selectedIndex].id}) {
-                        productListViewModel.productList?[index].isFavourite.toggle()
+                        productListViewModel.productList?[index].isFavourite?.toggle()
                     }
 
                     productListViewModel.favouriteProducts = productListViewModel.favouriteProducts?.filter { $0.id != productListViewModel.favouriteProducts?[selectedIndex].id }
@@ -146,7 +146,7 @@ struct ProductListView: View {
                 Image(systemName: "heart")
                     .padding(constants.mediumPadding)
                     .foregroundColor(Color.white)
-                    .background(product.isFavourite ? Color.accentColor : Color.secondary)
+                    .background(product.isFavourite ?? false ? Color.accentColor : Color.secondary)
                     .cornerRadius(constants.bottomViewHeight)
                     .padding()
             }
